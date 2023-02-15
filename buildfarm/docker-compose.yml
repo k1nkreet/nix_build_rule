@@ -1,0 +1,21 @@
+version: '3.0'
+services:
+  server:
+    # build: .
+    entrypoint: ["/bazel-buildfarm/bazel-bin/src/main/java/build/buildfarm/buildfarm-server", "/server.config"]
+    image:
+      buildfarm:latest
+    ports:
+      - 8980:8980
+
+  
+  worker:
+    # build: .
+    entrypoint: ["/bazel-buildfarm/bazel-bin/src/main/java/build/buildfarm/buildfarm-memory-worker", "/worker.config"]
+    image:
+      buildfarm:latest
+    volumes:
+      - ./cache:/data
+    depends_on:
+      - server
+    restart: always
